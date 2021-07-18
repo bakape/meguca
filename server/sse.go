@@ -6,17 +6,23 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
+	"time"
 )
 
 var SSEBroker Broker
 
+const cloudflareTimeout time.Duration = 100 * time.Second
+
 func init() {
+	// Tick a few seconds before cloudflare times out the connection
+	timer := time.Tick(cloudflareTimeout - 5*time.Second)
 	SSEBroker = Broker{
 		make(chan ServerEvent),
 		make(map[string][]client),
 		make(chan client),
 		make(chan client),
 		make(chan os.Signal),
+		timer,
 	}
 	go SSEBroker.Start()
 	signal.Notify(SSEBroker.sigInt, os.Interrupt)
@@ -31,19 +37,23 @@ type client struct {
 	Source string
 	Msg    chan []byte
 	SigInt chan struct{}
+	Ping   chan struct{}
 }
 
 type Broker struct {
-	Event   chan ServerEvent
-	clients map[string][]client
-	subCh   chan client
-	unsubCh chan client
-	sigInt  chan os.Signal
+	Event     chan ServerEvent
+	clients   map[string][]client
+	subCh     chan client
+	unsubCh   chan client
+	sigInt    chan os.Signal
+	pingTimer <-chan time.Time
 }
 
 func (b Broker) Start() {
 	for {
 		select {
+		case <-b.pingTimer:
+			b.ping()
 		case event := <-b.Event:
 			b.broadcast(event)
 		case newClient := <-b.subCh:
@@ -53,6 +63,15 @@ func (b Broker) Start() {
 		case <-b.sigInt:
 			b.shutdown()
 			return
+		}
+	}
+}
+
+// Send an empty message to all connected clients to refresh connection timer
+func (b Broker) ping() {
+	for _, e := range b.clients {
+		for _, f := range e {
+			f.Ping <- struct{}{}
 		}
 	}
 }
@@ -130,12 +149,17 @@ func sse(w http.ResponseWriter, r *http.Request) {
 		Source: u.Path,
 		Msg:    make(chan []byte),
 		SigInt: make(chan struct{}),
+		Ping:   make(chan struct{}),
 	}
 
 	SSEBroker.Add(listener)
 
 	for {
 		select {
+		case <-listener.Ping:
+			// Send a comment line to stop cloudflare killing the connection
+			fmt.Fprint(w, ":")
+			flusher.Flush()
 		case msg := <-listener.Msg:
 			fmt.Fprintf(w, "data: %s\n\n", msg)
 			flusher.Flush()
