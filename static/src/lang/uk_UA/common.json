@@ -2,6 +2,7 @@
 	"format": {
 		"banned": "BANNED BY '%s' FOR %s FOR \"%s\"",
 		"deleted": "DELETED BY '%s'",
+		"deletedReason": "DELETED BY '%s' FOR '%s'",
 		"imageDeleted": "IMAGE DELETED BY '%s'",
 		"imageSpoilered": "IMAGE SPOILERED BY '%s'",
 		"newPostsInThread": "%d new post(s) in thread.",

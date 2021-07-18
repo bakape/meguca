@@ -1534,6 +1534,12 @@ var migrations = []func(tx *sql.Tx) error{
 			add randomNameHours bool not null default false`,
 		)
 	},
+	func(tx *sql.Tx) error {
+		// Reload trigger
+		return registerTriggers(tx, map[string][]triggerDescriptor{
+			"posts": {{before, tableInsert}},
+		})
+	},
 }
 
 func createIndex(table string, columns ...string) string {

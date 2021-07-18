@@ -2,6 +2,7 @@
 	"format": {
 		"banned": "VERBANNEN DOOR '%s' VOOR %s VOOR \"%s\"",
 		"deleted": "VERWIJDERD '%s'",
+		"deletedReason": "DELETED BY '%s' FOR '%s'",
 		"imageDeleted": "AFBEELDING VERWIJDERD DOOR '%s'",
 		"imageSpoilered": "IMAGE SPOILERED DOOR '%s'",
 		"newPostsInThread": "%d niewe berichten in topic.",

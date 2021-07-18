@@ -2,6 +2,7 @@
 	"format": {
 		"banned": "被 '%s' 封鎖，原因: %s、時長: \"%s\"",
 		"deleted": "被 '%s' 刪除",
+		"deletedReason": "DELETED BY '%s' FOR '%s'",
 		"imageDeleted": "圖片被 '%s' 刪除",
 		"imageSpoilered": "圖片被 '%s' 標上劇透標記",
 		"newPostsInThread": "%d 則新貼文在討論串。",

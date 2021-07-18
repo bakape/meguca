@@ -2,6 +2,7 @@ create or replace function before_posts_insert()
 returns trigger as $$
 declare
 	to_delete_by text;
+	to_delete_reason text;
 begin
 	perform bump_thread(new.op, not new.sage);
 	-- +1, because new post is not inserted yet
@@ -9,7 +10,7 @@ begin
 		new.op || ',' || post_count(new.op) + 1);
 
 	-- Delete post, if IP blacklisted
-	select b.by into to_delete_by
+	select b.by, b.reason into to_delete_by, to_delete_reason
 		from bans b
 		-- Can't use post_board(), because not inserted yet
 		where board = (select t.board
@@ -21,8 +22,8 @@ begin
 	if to_delete_by is not null then
 		-- Will fail otherwise, because key is not written to table yet
 		set constraints post_moderation_post_id_fkey deferred;
-		insert into post_moderation (post_id, type, "by")
-			values (new.id, 2, to_delete_by);
+		insert into post_moderation (post_id, type, "by", "data")
+			values (new.id, 2, to_delete_by, to_delete_reason);
 		new.moderated = true;
 	end if;
 

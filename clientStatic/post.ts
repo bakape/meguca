@@ -118,7 +118,12 @@ export class Post {
                         .toUpperCase(), data);
                     break;
                 case ModerationAction.deletePost:
-                    s = this.format("deleted", by);
+                    // Shadow bins require a reason
+                    if (data) {
+                        s = this.format("deletedReason", by, data);
+                    } else {
+                        s = this.format("deleted", by);
+                    }
                     break;
                 case ModerationAction.deleteImage:
                     s = this.format("imageDeleted", by);

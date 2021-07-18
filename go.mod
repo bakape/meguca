@@ -6,11 +6,10 @@ replace github.com/Sirupsen/logrus => github.com/sirupsen/logrus v1.4.0
 
 require (
 	github.com/Masterminds/squirrel v1.4.0
-	github.com/abh/geoip v0.0.0-20160510155516-07cea4480daa // indirect
+	github.com/abh/geoip v0.0.0-20160510155516-07cea4480daa
 	github.com/aquilax/tripcode v1.0.0
 	github.com/badoux/goscraper v0.0.0-20190827161153-36995ce6b19f
 	github.com/bakape/captchouli/v2 v2.0.3
-	github.com/bakape/mnemonics v0.0.0-20170918165711-056d8d325992
 	github.com/bakape/thumbnailer/v2 v2.6.6
 	github.com/chai2010/webp v1.1.0
 	github.com/dimfeld/httptreemux v5.0.1+incompatible
@@ -30,9 +29,8 @@ require (
 	github.com/lib/pq v1.8.0
 	github.com/mattn/go-sqlite3 v1.14.0 // indirect
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
-	github.com/oschwald/geoip2-golang v1.4.0
-	github.com/oschwald/maxminddb-golang v1.7.0 // indirect
 	github.com/rakyll/statik v0.1.7
+	github.com/stretchr/testify v1.6.1 // indirect
 	github.com/ulikunitz/xz v0.5.7
 	github.com/valyala/quicktemplate v1.6.2
 	go.etcd.io/bbolt v1.3.5
